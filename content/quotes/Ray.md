@@ -1,0 +1,1 @@
+> 這就是為什麼有些人聽說了很多大道理卻依然過不好這一生的原因，你需要成為那個做總結的人，而不是總結的「消費者」—《[你真的不需要一年讀100本書](https://www.youtube.com/watch?v=0CGTrSHADh4)》《[一口新飯](https://youtube.com/@moneyxyz?si=upaot4EMCTRO490N)》-- Ray
