@@ -72,6 +72,10 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const slug = simplifySlug(fullSlug)
   const visited = getVisited()
   removeAllChildren(graph)
+  // 每次 render 時先恢復顯示，避免從無連結的頁面導航到有連結的頁面時 graph 持續隱藏
+  // （若該頁面無連結，後續會再將其隱藏）
+  const graphContainer = graph.closest(".graph") as HTMLElement
+  if (graphContainer) graphContainer.style.display = ""
 
   let {
     drag: enableDrag,
@@ -162,6 +166,11 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   const width = graph.offsetWidth
+  // 若該頁面沒有任何連結（僅有自身節點），隱藏 graph 避免顯示空白圖形
+  if (graphData.nodes.length <= 1) {
+    if (graphContainer) graphContainer.style.display = "none"
+    return
+  }
   const height = Math.max(graph.offsetHeight, 250)
 
   // we virtualize the simulation and use pixi to actually render it
