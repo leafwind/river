@@ -29,7 +29,10 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
     if (text) {
       const segments: (string | JSX.Element)[] = []
 
-      if (fileData.dates) {
+      // 若檔名本身即為日期格式（如 2026-02-28）或首頁，不顯示日期
+      const isDateFilename = /^\d{4}-\d{2}-\d{2}$/.test(fileData.slug ?? "")
+      const isIndex = fileData.slug === "index"
+      if (fileData.dates && !isDateFilename && !isIndex) {
         segments.push(<Date date={getDate(cfg, fileData)!} locale={cfg.locale} />)
       }
 
