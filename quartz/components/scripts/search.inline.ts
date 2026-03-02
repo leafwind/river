@@ -85,6 +85,7 @@ let index = new FlexSearch.Document<Item>({
 
 const p = new DOMParser()
 const fetchContentCache: Map<FullSlug, Element[]> = new Map()
+// 修改這裡沒用，因為中文的一整段文字都會被認為是一個 token，要改下面的 slice
 const contextWindowWords = 30
 const numSearchResults = 8
 const numTagResults = 5
@@ -141,7 +142,19 @@ function highlight(searchTerm: string, text: string, trim?: boolean) {
     })
     .join(" ")
 
-  return `${startIndex === 0 ? "" : "..."}${slice}${
+  // --- 針對中文內容 trim 顯示的搜尋結果 ---
+  let finalDisplay = slice
+  const isMobile = window.innerWidth < 600
+
+  // 根據裝置設定不同的物理截斷長度
+  const limit = isMobile ? 45 : 150 // 手機約 1.5 ~ 2 行，桌面約 2 ~ 3 行
+
+  if (finalDisplay.length > limit) {
+    // 為了避免截斷到 HTML 標籤（例如 <span class="high...），
+    // 較保險的做法是找最後一個空白或標點符號，但中文直接截斷通常也能接受
+    finalDisplay = finalDisplay.substring(0, limit) + "..."
+  }
+  return `${startIndex === 0 ? "" : "..."}${finalDisplay}${
     endIndex === tokenizedText.length - 1 ? "" : "..."
   }`
 }
